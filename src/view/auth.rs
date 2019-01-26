@@ -19,13 +19,13 @@ pub fn login_submit(
     mut cookies: Cookies,
     request_id: RequestId,
     ip: PeerAddr,
-) -> Result<Either<Response, Redirect>, crate::rocket_utils::Error> {
+) -> Result<Either<Response<'static>, Redirect>, crate::rocket_utils::Error> {
     let (user, token) = match attempt_login(&conn, &form.login_name, &form.password, request_id, ip)
     {
         Err(LoginResult::UserNotFound) | Err(LoginResult::PasswordIncorrect) => {
             return Ok(Either::Left(
                 LoginViewModel {
-                    error: Some("Could not log in"),
+                    error: "Could not log in, username / password incorrect",
                     login_name: form.login_name.as_str(),
                 }
                 .to_response()?,
@@ -51,7 +51,7 @@ pub fn register_submit(
 ) -> Result<Either<Response, Redirect>, crate::rocket_utils::Error> {
     let error_form = |e: &str| {
         let response = RegisterViewModel {
-            error: Some(e),
+            error: e,
             login_name: form.login_name.as_str(),
             email: form.email.as_str(),
         }
@@ -98,7 +98,7 @@ pub struct IndexModel;
 #[derive(Template, Default)]
 #[template(path = "login.html")]
 pub struct LoginViewModel<'a> {
-    pub error: Option<&'a str>,
+    pub error: &'a str,
     pub login_name: &'a str,
 }
 
@@ -111,7 +111,7 @@ pub struct LoginSubmitModel {
 #[derive(Template, Default)]
 #[template(path = "register.html")]
 pub struct RegisterViewModel<'a> {
-    pub error: Option<&'a str>,
+    pub error: &'a str,
     pub login_name: &'a str,
     pub email: &'a str,
 }

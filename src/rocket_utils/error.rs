@@ -8,12 +8,15 @@ where
     T: Into<failure::Error>,
 {
     fn from(item: T) -> Error {
-        Error(item.into())
+        let error = item.into();
+        println!("{:?}", error);
+        Error(error)
     }
 }
 
 impl Error {
     pub fn from_status_code(status: Status) -> Error {
+        println!("Generic status code: {:?}", status);
         Error(failure::format_err!("{:?}", status))
     }
 }

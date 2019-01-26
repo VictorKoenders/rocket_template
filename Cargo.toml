@@ -10,7 +10,7 @@ chrono = "0.4"
 dotenv = "0.13"
 failure = "0.1"
 pbkdf2 = "0.3"
-rand = "*"
+rand = "0.6"
 rocket = "0.4"
 
 [dependencies.diesel]
@@ -24,3 +24,6 @@ version = "0.4"
 [dependencies.uuid]
 features = ["v4"]
 version = "0.7"
+
+[build-dependencies]
+askama = "0.7"

@@ -7,7 +7,7 @@ pub use error::{Error, ResponseResult, Result};
 use rocket::request::{FromRequest, Outcome, Request};
 use uuid::Uuid;
 
-#[database("DATABASE_URL")]
+#[database("DATABASE")]
 pub struct Connection(diesel::PgConnection);
 impl Connection {
     pub fn get(&self) -> &diesel::PgConnection {
@@ -21,6 +21,7 @@ pub struct RequestId(pub Uuid);
 impl<'a, 'r> FromRequest<'a, 'r> for RequestId {
     type Error = !;
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, Self::Error> {
+        println!("RequestId from request");
         Outcome::Success(*request.local_cache(|| RequestId(Uuid::new_v4())))
     }
 }
@@ -32,6 +33,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for PeerAddr {
     type Error = !;
 
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, Self::Error> {
+        println!("PeerAddr from request");
         let ip = request
             .client_ip()
             .unwrap_or_else(|| std::net::Ipv4Addr::LOCALHOST.into());
