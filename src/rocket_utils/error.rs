@@ -1,3 +1,4 @@
+use rocket::http::Status;
 use std::fmt;
 
 pub struct Error(failure::Error);
@@ -8,6 +9,12 @@ where
 {
     fn from(item: T) -> Error {
         Error(item.into())
+    }
+}
+
+impl Error {
+    pub fn from_status_code(status: Status) -> Error {
+        Error(failure::format_err!("{:?}", status))
     }
 }
 

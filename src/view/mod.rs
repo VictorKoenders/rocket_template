@@ -5,12 +5,7 @@ mod auth;
 pub fn route(r: Rocket) -> Rocket {
     r.mount(
         "/",
-        routes![
-            auth::login,
-            auth::login_submit,
-            // auth::register,
-            // auth::register_submit
-        ],
+        routes![auth::index, auth::login_submit, auth::register_submit],
     )
 }
 
