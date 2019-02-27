@@ -6,7 +6,7 @@ use chrono::{DateTime, Utc};
 use diesel::prelude::*;
 use uuid::Uuid;
 
-#[derive(Queryable)]
+#[derive(Queryable, Debug)]
 pub struct User {
     pub id: Uuid,
     pub register_request_id: Uuid,
@@ -40,6 +40,12 @@ impl User {
     pub fn load_by_login_name(conn: &Connection, name: &str) -> QueryResult<User> {
         users::table
             .filter(users::dsl::login_name.eq(name))
+            .get_result(conn.get())
+    }
+
+    pub fn load_by_email(conn: &Connection, email: &str) -> QueryResult<User> {
+        users::table
+            .filter(users::dsl::email.eq(email))
             .get_result(conn.get())
     }
 

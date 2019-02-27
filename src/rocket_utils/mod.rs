@@ -5,24 +5,12 @@ pub use either::Either;
 pub use error::{Error, ResponseResult, Result};
 
 use rocket::request::{FromRequest, Outcome, Request};
-use uuid::Uuid;
 
 #[database("DATABASE")]
 pub struct Connection(diesel::PgConnection);
 impl Connection {
     pub fn get(&self) -> &diesel::PgConnection {
         &*self
-    }
-}
-
-#[derive(Clone, Copy)]
-pub struct RequestId(pub Uuid);
-
-impl<'a, 'r> FromRequest<'a, 'r> for RequestId {
-    type Error = !;
-    fn from_request(request: &'a Request<'r>) -> Outcome<Self, Self::Error> {
-        println!("RequestId from request");
-        Outcome::Success(*request.local_cache(|| RequestId(Uuid::new_v4())))
     }
 }
 

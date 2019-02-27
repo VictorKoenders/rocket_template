@@ -1,13 +1,14 @@
 use super::ToResponse;
+use crate::models::request::RequestId;
 use crate::models::user::{Token, User};
-use crate::rocket_utils::{Connection, Either, PeerAddr, RequestId, ResponseResult};
+use crate::rocket_utils::{Connection, Either, PeerAddr, ResponseResult};
 use askama::Template;
 use rocket::http::{Cookie, Cookies};
 use rocket::request::Form;
 use rocket::response::Redirect;
 use rocket::Response;
 
-#[get("/")]
+#[get("/", rank = 2)]
 pub fn index() -> ResponseResult {
     IndexModel::default().to_response()
 }
@@ -66,6 +67,9 @@ pub fn register_submit(
     }
     if User::load_by_login_name(&conn, &form.login_name).is_ok() {
         return error_form("Name already in use");
+    }
+    if User::load_by_email(&conn, &form.email).is_ok() {
+        return error_form("Email already in use");
     }
 
     let user = match User::register(
