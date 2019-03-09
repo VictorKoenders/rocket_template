@@ -1,31 +1,54 @@
-use rocket::http::Status;
-use std::fmt;
 
+#[derive(Debug)]
 pub struct Error(failure::Error);
 
-impl<T> From<T> for Error
-where
-    T: Into<failure::Error>,
-{
-    fn from(item: T) -> Error {
-        let error = item.into();
-        println!("{:?}", error);
-        Error(error)
-    }
-}
-
 impl Error {
-    pub fn from_status_code(status: Status) -> Error {
-        println!("Generic status code: {:?}", status);
-        Error(failure::format_err!("{:?}", status))
+    pub fn from_status_code(status: rocket::http::Status) -> Error {
+        Error(failure::format_err!("Server error: {:?}", status))
     }
 }
 
-impl fmt::Debug for Error {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self.0)
+impl<T> From<T> for Error where T: Into<failure::Error> {
+    fn from(t: T) -> Error {
+        Error(t.into())
     }
 }
 
-pub type Result<T> = std::result::Result<T, Error>;
-pub type ResponseResult = Result<rocket::Response<'static>>;
+
+pub struct ResponseResult {
+    result: Result<rocket::Response<'static>, failure::Error>,
+}
+
+impl<'a> rocket::response::Responder<'a> for ResponseResult {
+    fn respond_to(self, request: &rocket::Request) -> rocket::response::Result<'a> {
+        unimplemented!()
+    }
+}
+
+impl ResponseResult {
+    pub fn from_string(str: String) -> ResponseResult {
+        let response = rocket::Response::build()
+            .status(rocket::http::Status::Ok)
+            .header(rocket::http::ContentType::HTML)
+            .sized_body(std::io::Cursor::new(str))
+            .finalize();
+        ResponseResult {
+            result: Ok(response),
+        }
+
+    }
+}
+
+impl<T> From<T> for ResponseResult where T : askama::Template {
+    fn from(t: T) -> ResponseResult {
+        match t.render() {
+            Ok(str) => 
+                ResponseResult::from_string(str)
+            ,
+            Err(e) => ResponseResult {
+                result: Err(e.into()),
+            }
+        }
+    }
+}
+

@@ -14,7 +14,7 @@ pub struct RequestInsert<'a> {
     created_on: DateTime<Utc>,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct RequestId(pub Uuid);
 
 impl<'a, 'r> FromRequest<'a, 'r> for RequestId {

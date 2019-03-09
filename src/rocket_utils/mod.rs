@@ -2,7 +2,7 @@ mod either;
 mod error;
 
 pub use either::Either;
-pub use error::{Error, ResponseResult, Result};
+pub use error::{ResponseResult, Error};
 
 use rocket::request::{FromRequest, Outcome, Request};
 
