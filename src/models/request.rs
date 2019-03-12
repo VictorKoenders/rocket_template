@@ -48,3 +48,31 @@ impl<'a, 'r> FromRequest<'a, 'r> for RequestId {
         Outcome::Success(*request.local_cache(|| RequestId(id)))
     }
 }
+
+impl RequestId {
+    pub fn finalize(&self) -> FinalizeRequest {
+        FinalizeRequest {
+            id: self.0,
+            status: 0,
+            finished_on: chrono::MIN_DATE.and_hms(0, 0, 0),
+        }
+    }
+}
+
+pub struct FinalizeRequest {
+    id: Uuid,
+    pub status: u16,
+    pub finished_on: DateTime<Utc>,
+}
+
+impl FinalizeRequest {
+    pub fn save(self, conn: &Connection) -> Result<(), failure::Error> {
+        diesel::update(request_logs::table.find(self.id))
+            .set((
+                request_logs::dsl::response_code.eq(Some(i32::from(self.status))),
+                request_logs::dsl::finished_on.eq(Some(self.finished_on)),
+            ))
+            .execute(&**conn)?;
+        Ok(())
+    }
+}

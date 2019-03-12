@@ -27,14 +27,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for User {
             _ => return remove_tokens_and_forward(),
         };
 
-        let conn = match request.guard::<Connection>() {
-            Outcome::Success(c) => c,
-            Outcome::Forward(()) => return Outcome::Forward(()),
-            Outcome::Failure((e, ())) => {
-                return Outcome::Failure((e, Error::from_status_code(e)));
-            }
-        };
-
+        let conn = request.guard::<Connection>().unwrap();
         let peer_addr = request.guard::<PeerAddr>().unwrap();
 
         let user = match User::load_by_id(&conn, user_id) {

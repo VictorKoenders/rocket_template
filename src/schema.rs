@@ -35,8 +35,4 @@ table! {
 joinable!(user_tokens -> request_logs (created_request_id));
 joinable!(user_tokens -> users (user_id));
 
-allow_tables_to_appear_in_same_query!(
-    request_logs,
-    users,
-    user_tokens,
-);
+allow_tables_to_appear_in_same_query!(request_logs, users, user_tokens,);

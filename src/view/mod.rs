@@ -6,7 +6,12 @@ use rocket::Rocket;
 
 #[get("/")]
 pub fn index(user: User) -> ResponseResult {
-    ResponseResult::from_string(format!("Hello {}", user.name))
+    format!("Hello {}", user.name).into()
+}
+
+#[get("/", rank = 2)]
+pub fn landing() -> ResponseResult {
+    "Not logged in".to_owned().into()
 }
 
 pub fn route(r: Rocket) -> Rocket {
@@ -14,10 +19,10 @@ pub fn route(r: Rocket) -> Rocket {
         "/",
         routes![
             index,
+            landing,
             // auth::index,
             // auth::login_submit,
             // auth::register_submit
         ],
     )
 }
-
