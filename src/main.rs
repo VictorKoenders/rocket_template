@@ -1,11 +1,4 @@
-#![feature(
-    proc_macro_hygiene,
-    decl_macro,
-    never_type,
-    type_alias_enum_variants,
-    specialization
-)]
-#![allow(proc_macro_derive_resolution_fallback)]
+#![feature(proc_macro_hygiene, decl_macro, never_type, type_alias_enum_variants)]
 
 #[macro_use]
 extern crate rocket;

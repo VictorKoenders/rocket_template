@@ -2,7 +2,7 @@ use crate::models::user::User;
 use crate::rocket_utils::ResponseResult;
 use rocket::Rocket;
 
-// mod auth;
+mod auth;
 
 #[get("/")]
 pub fn index(user: User) -> ResponseResult {
@@ -11,7 +11,7 @@ pub fn index(user: User) -> ResponseResult {
 
 #[get("/", rank = 2)]
 pub fn landing() -> ResponseResult {
-    "Not logged in".to_owned().into()
+    "Not logged in".into()
 }
 
 pub fn route(r: Rocket) -> Rocket {

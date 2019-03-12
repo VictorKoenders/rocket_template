@@ -20,13 +20,7 @@ pub struct RequestId(pub Uuid);
 impl<'a, 'r> FromRequest<'a, 'r> for RequestId {
     type Error = Error;
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, Self::Error> {
-        let conn = match request.guard::<Connection>() {
-            Outcome::Success(c) => c,
-            Outcome::Forward(()) => return Outcome::Forward(()),
-            Outcome::Failure((e, ())) => {
-                return Outcome::Failure((e, Error::from_status_code(e)));
-            }
-        };
+        let conn = request.guard::<Connection>().unwrap();
 
         let request_insert = RequestInsert {
             url: request.uri().path(),

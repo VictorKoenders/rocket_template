@@ -1,12 +1,9 @@
-use super::ToResponse;
 use crate::models::request::RequestId;
 use crate::models::user::{Token, User};
-use crate::rocket_utils::{Connection, Either, PeerAddr, ResponseResult};
+use crate::rocket_utils::{Connection, PeerAddr, RenderTemplate, ResponseResult};
 use askama::Template;
 use rocket::http::{Cookie, Cookies};
 use rocket::request::Form;
-use rocket::response::Redirect;
-use rocket::Response;
 
 #[get("/", rank = 2)]
 pub fn index() -> ResponseResult {
@@ -20,26 +17,24 @@ pub fn login_submit(
     mut cookies: Cookies,
     request_id: RequestId,
     ip: PeerAddr,
-) -> Result<Either<Response<'static>, Redirect>, crate::rocket_utils::Error> {
+) -> ResponseResult {
     let (user, token) = match attempt_login(&conn, &form.login_name, &form.password, request_id, ip)
     {
         Err(LoginResult::UserNotFound) | Err(LoginResult::PasswordIncorrect) => {
-            return Ok(Either::Left(
-                LoginViewModel {
-                    error: "Could not log in, username / password incorrect",
-                    login_name: form.login_name.as_str(),
-                }
-                .to_response()?,
-            ));
+            return LoginViewModel {
+                error: "Could not log in, username / password incorrect",
+                login_name: form.login_name.as_str(),
+            }
+            .to_response();
         }
-        Err(LoginResult::Other(e)) => return Err(e),
+        Err(LoginResult::Other(e)) => return e.into(),
         Ok(u) => u,
     };
 
     cookies.add_private(Cookie::new("UID", user.id.to_string()));
     cookies.add_private(Cookie::new("TID", token.id.to_string()));
 
-    Ok(Either::Right(Redirect::to("/")))
+    ResponseResult::redirect_to("/")
 }
 
 #[post("/user/register", data = "<form>")]
@@ -49,18 +44,14 @@ pub fn register_submit(
     mut cookies: Cookies,
     request_id: RequestId,
     ip: PeerAddr,
-) -> Result<Either<Response, Redirect>, crate::rocket_utils::Error> {
+) -> ResponseResult {
     let error_form = |e: &str| {
-        let response = RegisterViewModel {
+        RegisterViewModel {
             error: e,
             login_name: form.login_name.as_str(),
             email: form.email.as_str(),
         }
-        .to_response();
-        match response {
-            Ok(r) => Ok(Either::Left(r)),
-            Err(e) => Err(e),
-        }
+        .to_response()
     };
     if form.password != form.repeat_password {
         return error_form("Passwords don't match");
@@ -92,7 +83,7 @@ pub fn register_submit(
     cookies.add_private(Cookie::new("UID", user.id.to_string()));
     cookies.add_private(Cookie::new("TID", token.id.to_string()));
 
-    Ok(Either::Right(Redirect::to("/")))
+    ResponseResult::redirect_to("/")
 }
 
 #[derive(Template, Default)]
