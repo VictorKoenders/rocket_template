@@ -12,10 +12,7 @@ pub struct Header<'a> {
 
 impl<'a> Header<'a> {
     pub fn new(user: &'a User, current_url: &'a str) -> Header<'a> {
-        Header {
-            user,
-            current_url,
-        }
+        Header { user, current_url }
     }
 
     pub fn nav_item(&self, display_name: &str, url: &str) -> String {
@@ -63,4 +60,3 @@ pub fn route(r: Rocket) -> Rocket {
         ],
     )
 }
-

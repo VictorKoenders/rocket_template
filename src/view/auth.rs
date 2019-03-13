@@ -20,7 +20,6 @@ pub fn logout(mut cookies: Cookies) -> ResponseResult {
     ResponseResult::redirect_to("/")
 }
 
-
 #[post("/user/login", data = "<form>")]
 pub fn login_submit(
     form: Form<LoginSubmitModel>,
