@@ -53,7 +53,10 @@ impl<'a> rocket::response::Responder<'a> for ResponseResult {
                     .sized_body(std::io::Cursor::new(body))
                     .finalize())
             }
-            ResponseResult::Redirect(s) => rocket::response::Redirect::to(s).respond_to(request),
+            ResponseResult::Redirect(s) => {
+                finalizer.status = 303;
+                rocket::response::Redirect::to(s).respond_to(request)
+            }
         };
 
         finalizer.finished_on = Utc::now();

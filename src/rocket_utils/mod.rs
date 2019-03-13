@@ -21,7 +21,6 @@ impl<'a, 'r> FromRequest<'a, 'r> for PeerAddr {
     type Error = !;
 
     fn from_request(request: &'a Request<'r>) -> Outcome<Self, Self::Error> {
-        println!("PeerAddr from request");
         let ip = request
             .client_ip()
             .unwrap_or_else(|| std::net::Ipv4Addr::LOCALHOST.into());

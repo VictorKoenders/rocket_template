@@ -10,6 +10,17 @@ pub fn index() -> ResponseResult {
     IndexModel::default().to_response()
 }
 
+#[get("/user/logout")]
+pub fn logout(mut cookies: Cookies) -> ResponseResult {
+    let cookie_list: Vec<Cookie> = cookies.iter().cloned().collect();
+    for cookie in cookie_list {
+        cookies.remove(cookie.clone());
+        cookies.remove_private(cookie);
+    }
+    ResponseResult::redirect_to("/")
+}
+
+
 #[post("/user/login", data = "<form>")]
 pub fn login_submit(
     form: Form<LoginSubmitModel>,
