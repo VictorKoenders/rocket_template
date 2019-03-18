@@ -1,15 +1,14 @@
 #![feature(proc_macro_hygiene, decl_macro, never_type, type_alias_enum_variants)]
+#![allow(warnings)]
 
 #[macro_use]
 extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
-#[macro_use]
-extern crate diesel;
 
-pub mod models;
+pub mod request;
 pub mod rocket_utils;
-pub mod schema;
+pub mod user;
 pub mod view;
 
 fn main() {

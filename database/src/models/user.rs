@@ -1,7 +1,5 @@
-mod from_request;
-
-use crate::rocket_utils::Connection;
 use crate::schema::{user_tokens, users};
+use crate::Conn;
 use chrono::{DateTime, Utc};
 use diesel::prelude::*;
 use uuid::Uuid;
@@ -33,20 +31,20 @@ const PASSWORD_ITERATION_COUNT: (u32, u32) = (1_000, 1_100);
 const PASSWORD_ITERATION_COUNT: (u32, u32) = (10_000, 11_000);
 
 impl User {
-    pub fn load_by_id(conn: &Connection, id: Uuid) -> QueryResult<User> {
-        users::table.find(id).get_result(conn.get())
+    pub fn load_by_id(conn: &Conn, id: Uuid) -> QueryResult<User> {
+        users::table.find(id).get_result(conn)
     }
 
-    pub fn load_by_login_name(conn: &Connection, name: &str) -> QueryResult<User> {
+    pub fn load_by_login_name(conn: &Conn, name: &str) -> QueryResult<User> {
         users::table
             .filter(users::dsl::login_name.eq(name))
-            .get_result(conn.get())
+            .get_result(conn)
     }
 
-    pub fn load_by_email(conn: &Connection, email: &str) -> QueryResult<User> {
+    pub fn load_by_email(conn: &Conn, email: &str) -> QueryResult<User> {
         users::table
             .filter(users::dsl::email.eq(email))
-            .get_result(conn.get())
+            .get_result(conn)
     }
 
     pub fn verify_password(&self, password: &str) -> bool {
@@ -54,7 +52,7 @@ impl User {
     }
 
     pub fn register(
-        conn: &Connection,
+        conn: &Conn,
         login_name: &str,
         password: &str,
         email: &str,
@@ -74,7 +72,7 @@ impl User {
         };
         diesel::insert_into(users::table)
             .values(&insert)
-            .get_result(conn.get())
+            .get_result(conn)
     }
 }
 
@@ -98,7 +96,7 @@ pub struct TokenInsert<'a> {
 
 impl Token {
     pub fn create_for_user(
-        conn: &Connection,
+        conn: &Conn,
         user_id: Uuid,
         request_id: Uuid,
         ip: &str,
@@ -110,16 +108,16 @@ impl Token {
                 created_request_id: request_id,
                 ip,
             })
-            .get_result(conn.get())
+            .get_result(conn)
     }
 
-    pub fn load_by_user_and_id(conn: &Connection, user: &User, id: Uuid) -> QueryResult<Token> {
+    pub fn load_by_user_and_id(conn: &Conn, user: &User, id: Uuid) -> QueryResult<Token> {
         user_tokens::table
             .filter(
                 user_tokens::dsl::id
                     .eq(id)
                     .and(user_tokens::dsl::user_id.eq(user.id)),
             )
-            .get_result(conn.get())
+            .get_result(conn)
     }
 }

@@ -7,9 +7,9 @@ pub use error::{Error, RenderTemplate, ResponseResult};
 use rocket::request::{FromRequest, Outcome, Request};
 
 #[database("DATABASE")]
-pub struct Connection(diesel::PgConnection);
+pub struct Connection(database::Conn);
 impl Connection {
-    pub fn get(&self) -> &diesel::PgConnection {
+    pub fn get(&self) -> &database::Conn {
         &*self
     }
 }

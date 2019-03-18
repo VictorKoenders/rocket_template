@@ -1,6 +1,6 @@
-use crate::models::request::RequestId;
-use crate::models::user::{Token, User};
+use crate::request::RequestId;
 use crate::rocket_utils::{Connection, PeerAddr, RenderTemplate, ResponseResult};
+use crate::user::{Token, User};
 use askama::Template;
 use rocket::http::{Cookie, Cookies};
 use rocket::request::Form;
@@ -85,7 +85,7 @@ pub fn register_submit(
         }
         Ok(u) => u,
     };
-    let token = match Token::create_for_user(&conn, user.id, request_id.0, &ip.0.to_string()) {
+    let token = match Token::create_for_user(conn.get(), user.id, request_id.0, &ip.0.to_string()) {
         Ok(token) => token,
         Err(e) => return error_form(e.to_string().as_str()),
     };
@@ -142,14 +142,14 @@ fn attempt_login(
     request_id: RequestId,
     ip: PeerAddr,
 ) -> Result<(User, Token), LoginResult> {
-    let user = User::load_by_login_name(conn, login_name).map_err(|e| match e {
-        diesel::result::Error::NotFound => LoginResult::UserNotFound,
+    let user = database::user::User::load_by_login_name(conn.get(), login_name).map_err(|e| match e {
+        database::diesel::result::Error::NotFound => LoginResult::UserNotFound,
         e => LoginResult::Other(e.into()),
     })?;
     if user.verify_password(password) {
-        let token = Token::create_for_user(conn, user.id, request_id.0, &ip.0.to_string())
+        let token = Token::create_for_user(conn.get(), user.id, request_id.0, &ip.0.to_string())
             .map_err(|e| LoginResult::Other(e.into()))?;
-        Ok((user, token))
+        Ok((user.into(), token))
     } else {
         Err(LoginResult::PasswordIncorrect)
     }

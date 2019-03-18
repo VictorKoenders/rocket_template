@@ -1,0 +1,19 @@
+[package]
+authors = ["Victor Koenders <victor.koenders@gmail.com>"]
+edition = "2018"
+name = "database"
+version = "0.1.0"
+
+[dependencies]
+chrono = "0.4"
+failure = "0.1"
+pbkdf2 = "0.3"
+rand = "0.6"
+
+[dependencies.diesel]
+features = ["postgres", "serde_json", "uuidv07", "chrono", "r2d2"]
+version = "1.4"
+
+[dependencies.uuid]
+features = ["v4"]
+version = "0.7"

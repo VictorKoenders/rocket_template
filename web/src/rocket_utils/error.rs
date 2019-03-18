@@ -1,4 +1,4 @@
-use crate::models::request::RequestId;
+use crate::request::RequestId;
 use crate::rocket_utils::Connection;
 use chrono::Utc;
 pub use failure::Error;

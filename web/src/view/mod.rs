@@ -1,5 +1,5 @@
-use crate::models::user::User;
 use crate::rocket_utils::{RenderTemplate, ResponseResult};
+use crate::user::User;
 use askama::Template;
 use rocket::Rocket;
 
