@@ -10,7 +10,7 @@ pub struct User {
     pub register_request_id: Uuid,
     pub name: String,
     pub login_name: String,
-    pub password: String,
+    password: String,
     pub email: String,
     pub email_confirmed_request_id: Option<Uuid>,
 }

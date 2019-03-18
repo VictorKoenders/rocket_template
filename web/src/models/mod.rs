@@ -8,6 +8,7 @@ macro_rules! wrap_database {
 
         impl $name {
             $(
+                #[allow(dead_code)]
                 pub fn $fn_name ($($param_name: $param_ty),*) -> Result<$result> {
                     $db_name::$fn_name($($param_name),*)
                         .map($name)

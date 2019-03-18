@@ -1,8 +1,6 @@
-mod either;
 mod error;
 mod request;
 
-pub use either::Either;
 pub use error::{Error, RenderTemplate, ResponseResult};
 pub use request::RequestId;
 
