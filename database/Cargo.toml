@@ -11,7 +11,7 @@ pbkdf2 = "0.3"
 rand = "0.6"
 
 [dependencies.diesel]
-features = ["postgres", "serde_json", "uuidv07", "chrono", "r2d2"]
+features = ["postgres", "uuidv07", "chrono", "r2d2"]
 version = "1.4"
 
 [dependencies.uuid]

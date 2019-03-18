@@ -236,7 +236,6 @@ dependencies = [
  "diesel_derives 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pq-sys 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "r2d2 0.8.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde_json 1.0.39 (registry+https://github.com/rust-lang/crates.io-index)",
  "uuid 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -1149,8 +1148,6 @@ dependencies = [
  "database 0.1.0",
  "dotenv 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "pbkdf2 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "rand 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "rocket 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rocket_contrib 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "uuid 0.7.2 (registry+https://github.com/rust-lang/crates.io-index)",
