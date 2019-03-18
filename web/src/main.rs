@@ -1,14 +1,13 @@
 #![feature(proc_macro_hygiene, decl_macro, never_type, type_alias_enum_variants)]
-#![allow(warnings)]
 
 #[macro_use]
 extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
 
+pub mod models;
 pub mod rocket_utils;
 pub mod view;
-pub mod models;
 
 fn main() {
     dotenv::dotenv().unwrap();

@@ -10,14 +10,14 @@ macro_rules! wrap_database {
             $(
                 pub fn $fn_name ($($param_name: $param_ty),*) -> Result<$result> {
                     $db_name::$fn_name($($param_name),*)
-                        .map(|u| $name(u))
+                        .map($name)
                         .map_err(Into::into)
                 }
             )*
         }
 
         impl From<$db_name> for $name {
-            fn from(u: $db_name) -> $name { 
+            fn from(u: $db_name) -> $name {
                 $name(u)
             }
         }
@@ -32,4 +32,3 @@ macro_rules! wrap_database {
 }
 
 pub mod user;
-

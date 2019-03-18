@@ -1,4 +1,4 @@
-use super::{RequestId, Connection};
+use super::{Connection, RequestId};
 use chrono::Utc;
 pub use failure::Error;
 

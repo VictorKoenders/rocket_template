@@ -1,5 +1,5 @@
 use crate::rocket_utils::Connection;
-use chrono::{DateTime, Utc};
+use chrono::Utc;
 use database::request::{FinalizeRequest, RequestInsert};
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome, Request};
@@ -23,7 +23,7 @@ impl<'a, 'r> FromRequest<'a, 'r> for RequestId {
 
         let id = match request_insert.save(&*conn) {
             Ok(id) => id,
-            Err(e) => return Outcome::Failure((Status::InternalServerError, e.into())),
+            Err(e) => return Outcome::Failure((Status::InternalServerError, e)),
         };
 
         Outcome::Success(*request.local_cache(|| RequestId(id)))
@@ -35,4 +35,3 @@ impl RequestId {
         FinalizeRequest::create(self.0)
     }
 }
-
