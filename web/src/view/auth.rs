@@ -1,6 +1,5 @@
-use crate::request::RequestId;
-use crate::rocket_utils::{Connection, PeerAddr, RenderTemplate, ResponseResult};
-use crate::user::{Token, User};
+use crate::rocket_utils::{RequestId, Connection, PeerAddr, RenderTemplate, ResponseResult};
+use crate::models::user::{Token, User};
 use askama::Template;
 use rocket::http::{Cookie, Cookies};
 use rocket::request::Form;

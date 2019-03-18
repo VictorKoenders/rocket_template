@@ -1,7 +1,9 @@
 mod either;
 mod error;
+mod request;
 
 pub use either::Either;
+pub use request::RequestId;
 pub use error::{Error, RenderTemplate, ResponseResult};
 
 use rocket::request::{FromRequest, Outcome, Request};

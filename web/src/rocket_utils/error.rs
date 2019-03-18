@@ -1,5 +1,4 @@
-use crate::request::RequestId;
-use crate::rocket_utils::Connection;
+use super::{RequestId, Connection};
 use chrono::Utc;
 pub use failure::Error;
 

@@ -6,10 +6,9 @@ extern crate rocket;
 #[macro_use]
 extern crate rocket_contrib;
 
-pub mod request;
 pub mod rocket_utils;
-pub mod user;
 pub mod view;
+pub mod models;
 
 fn main() {
     dotenv::dotenv().unwrap();

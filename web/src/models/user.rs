@@ -4,54 +4,14 @@ use database::user::User as DbUser;
 use rocket::request::{FromRequest, Outcome, Request};
 use uuid::Uuid;
 
-pub struct User(DbUser);
 type Result<T> = std::result::Result<T, Error>;
 
-impl From<DbUser> for User {
-    fn from(u: DbUser) -> User { 
-        User(u)
-    }
-}
-
-impl User {
-    // TODO: generate these methods through a macro or something
-    pub fn load_by_id(conn: &Connection, id: Uuid) -> Result<User> {
-        DbUser::load_by_id(conn.get(), id)
-            .map(|u| User(u))
-            .map_err(Into::into)
-    }
-
-    pub fn load_by_login_name(conn: &Connection, name: &str) -> Result<User> {
-        DbUser::load_by_login_name(conn.get(), name)
-            .map(|u| User(u))
-            .map_err(Into::into)
-    }
-
-    pub fn load_by_email(conn: &Connection, email: &str) -> Result<User> {
-        DbUser::load_by_email(conn.get(), email)
-            .map(|u| User(u))
-            .map_err(Into::into)
-    }
-
-    pub fn register(
-        conn: &Connection,
-        login_name: &str,
-        password: &str,
-        email: &str,
-        request_id: Uuid,
-    ) -> Result<User> {
-        DbUser::register(conn.get(), login_name, password, email, request_id)
-            .map(|u| User(u))
-            .map_err(Into::into)
-    }
-}
-
-impl std::ops::Deref for User {
-    type Target = DbUser;
-    fn deref(&self) -> &DbUser {
-        &self.0
-    }
-}
+wrap_database!(User(DbUser) {
+    pub fn load_by_id(conn: &Connection, id: Uuid) -> Result<User>;
+    pub fn load_by_login_name(conn: &Connection, name: &str) -> Result<User>;
+    pub fn load_by_email(conn: &Connection, email: &str) -> Result<User>;
+    pub fn register(conn: &Connection, login_name: &str, password: &str, email: &str, request_id: Uuid) -> Result<User>;
+});
 
 impl<'a, 'r> FromRequest<'a, 'r> for User {
     type Error = !;
@@ -103,3 +63,4 @@ impl<'a, 'r> FromRequest<'a, 'r> for User {
         }
     }
 }
+
